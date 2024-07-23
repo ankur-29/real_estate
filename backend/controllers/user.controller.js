@@ -8,9 +8,13 @@ export const registerUser = async(req, res) => {
     try{
         await newUser.save();
         res.status(201).json({
-            message: 'User created successfullly'
+            message: 'User created successfullly',
+            success: true,
         })
     } catch(err) {
-        console.log(err);
+        res.status(501).json({
+            message: err.message || 'Internal Server Error',
+            success: false,
+        })
     }
 }
