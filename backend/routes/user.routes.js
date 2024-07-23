@@ -1,0 +1,8 @@
+import express from 'express';
+import { registerUser } from '../controllers/user.controller.js';
+
+const userRouter = express.Router();
+
+userRouter.get('/', registerUser);
+
+export default userRouter;
