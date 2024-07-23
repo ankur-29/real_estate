@@ -1,33 +1,24 @@
-import {createBrowserRouter, RouterProvider} from 'react-router-dom';
-import Homepage from './components/Homepage';
-import Signup from './components/Signup';
-import Login from './components/Login';
-import Profile from './components/Profile';
-import About from './components/About';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import Homepage from './pages/Homepage';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import About from './pages/About';
+import Header from './components/Header';
 
-const router = createBrowserRouter([
-  {
-    path: '/', element:<Homepage/>
-  },
-  {
-    path: '/register', element: <Signup/>
-  },
-  {
-    path: '/login', element: <Login/>
-  },
-  {
-    path: '/about', element: <About/>
-  },
-  {
-    path: '/profile', element: <Profile/>
-  }
-])
 function App() {
 
   return (
-    <div className='h-screen bg-green-200'>
-      <RouterProvider router={router}/>
-    </div>
+    <BrowserRouter>
+    <Header/>
+    <Routes>
+      <Route path= '/' element={<Homepage/>}/>
+      <Route path= '/register' element={<Signup/>}/>
+      <Route path= '/login' element={<Login/>}/>
+      <Route path= '/about' element={<About/>}/>
+      <Route path= '/profile' element={<Profile/>}/>
+    </Routes>
+    </BrowserRouter>
   )
 }
 
