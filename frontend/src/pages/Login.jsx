@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
 import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice';
+import OAuth from '../components/OAuth';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ const Login = () => {
           className='uppercase text-white bg-blue-600 hover:opacity-95 rounded-lg p-3'>
           {loading ? 'Loading...' : 'Login'}
         </button>
+        <OAuth/>
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Dont have an account?</p>
