@@ -87,3 +87,34 @@ export const googleAuth = async (req, res) => {
         })
     }
 }
+
+export const updateUser = async (req, res) => {
+    if(req.id !== req.params.id) {
+        return res.send(401).json({message : 'User can modify their account only'}); 
+    }
+
+    try {
+        if(req.body.password) {
+            const hashedPassword = bcrypt.hashSync(password, 10);
+        }
+        const updateUser = await User.findByIdAndUpdate(req.param.id, {
+            $set: {
+                username: req.body.username,
+                email: req.body.email,
+                password: req.body.password,
+                avatar: req.body.avatar,
+            }
+        }, {new: true});
+        const {password, ...rest} = updateUser._doc;
+        res.status(200).json({
+            success: true,
+            message: 'User updated succesfully',
+            user: rest,
+        })
+    } catch(e) {
+        res.status(501).json({
+            message: err.message || 'Internal Server Error',
+            success: false,
+        })
+    }
+}
