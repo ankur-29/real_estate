@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
-import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice';
+import { loginFailure, loginStart, loginSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/userSlice';
 import {
   getDownloadURL, getStorage, ref, uploadBytesResumable,
 } from 'firebase/storage';
@@ -15,6 +15,7 @@ export default function Profile() {
   const [file, setFile] = useState(undefined);
   const [fileUploadPerc, setFileUploadPerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const [formData, setFormData] = useState({});
 
   useEffect(() => {
@@ -55,8 +56,8 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(loginStart());
-      const res = await fetch('/user/login', {
+      dispatch(updateUserStart());
+      const res = await fetch(`user/update/${currentUser._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -65,13 +66,13 @@ export default function Profile() {
       })
       const data = await res.json();
       if (data.success === false) {
-        dispatch(loginFailure(data.message));
+        dispatch(updateUserFailure(data.message));
         return;
       }
-      dispatch(loginSuccess(data));
-      navigate('/');
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
     } catch (err) {
-      dispatch(loginFailure(err.message))
+      dispatch(updateUserFailure(err.message))
     }
   }
 
@@ -108,6 +109,7 @@ export default function Profile() {
         <input
           type='text'
           placeholder='username'
+          defaultValue={currentUser.username}
           className='border p-3 rounded-lg'
           id='username'
           onChange={handleChange}
@@ -115,14 +117,18 @@ export default function Profile() {
         <input
           type='email'
           placeholder='email'
+          defaultValue={currentUser.email}
           className='border p-3 rounded-lg'
           id='email'
           onChange={handleChange}
         />
-        <input onChange={handleChange}
-          id='password'
+        <input
+          type='password'
+          placeholder='password'
           className='border p-3 rounded-lg'
-          type='text' placeholder='password' />
+          id='password'
+          onChange={handleChange}
+        />
         <button type='submit' disabled={loading}
           className='uppercase text-white bg-blue-600 hover:opacity-95 rounded-lg p-3'>
           {loading ? 'Loading...' : 'Update'}
@@ -136,6 +142,8 @@ export default function Profile() {
           className='uppercase text-white bg-red-600 hover:opacity-95 rounded-lg p-3 w-32'> Logout
         </button>
       </div>
+      <p className='text-red-700 mt-5'>{error ? error : ''}</p>
+      <p className='text-green-700 mt-5'>{updateSuccess ? 'User is updated successfully!' : ''}</p>
     </div>
   )
 }
