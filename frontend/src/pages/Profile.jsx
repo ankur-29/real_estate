@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
-import { updateUserFailure, updateUserStart, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/userSlice';
+import { updateUserFailure, updateUserStart, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess, logoutUserStart, logoutUserFailure, logoutUserSuccess } from '../redux/userSlice';
 import {
   getDownloadURL, getStorage, ref, uploadBytesResumable,
 } from 'firebase/storage';
@@ -89,11 +89,26 @@ export default function Profile() {
         return;
       }
       dispatch(deleteUserSuccess(data));
-      //navigate('/login');
     } catch(err) {
       dispatch(deleteUserFailure(err.message));
     }
   }
+
+  const handleLogout = async() => {
+    try {
+      dispatch(logoutUserStart());
+      const res = await fetch('user/logout');
+      const data = res.json();
+      if(data.success === false) {
+       dispatch(logoutUserFailure(data.message));
+        return;
+      }
+      dispatch(logoutUserSuccess(data));
+    } catch(err) {
+      dispatch( logoutUserFailure(err.message))
+    }
+  }
+
 
   return (
     <div className='mx-auto max-w-lg p-3'>
@@ -157,7 +172,7 @@ export default function Profile() {
         <button type='button' onClick={handleDeleteUser}
           className='uppercase text-white bg-red-600 hover:opacity-95 rounded-lg p-3'> Delete Account
         </button>
-        <button type='button'
+        <button type='button' onClick={handleLogout}
           className='uppercase text-white bg-red-600 hover:opacity-95 rounded-lg p-3 w-32'> Logout
         </button>
       </div>
