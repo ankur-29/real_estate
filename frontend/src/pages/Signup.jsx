@@ -19,7 +19,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch('/user/register', {
+      const res = await fetch('/api/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

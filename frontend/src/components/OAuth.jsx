@@ -18,7 +18,7 @@ const OAuth = () => {
                 email : result.user.email,
                 photo : result.user.photoURL,
             }
-            const res = await fetch('/user/googleAuth', {
+            const res = await fetch('/api/user/googleAuth', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
