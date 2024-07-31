@@ -118,3 +118,24 @@ export const updateUser = async (req, res) => {
         })
     }
 }
+
+export const deleteUser = async (req, res) => {
+    console.log(req.user);
+    console.log(req.params.id);
+    if(req.id !== req.params.id) {
+        return res.status(401).json({message : 'User can delete their account only'});
+    }
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.clearCookie('access_token');
+        res.status(200).json({
+            success: true,
+            message: 'User updated succesfully',
+        });
+    } catch(err) {
+        res.status(501).json({
+            message: err.message || 'Internal Server Error',
+            success: false,
+        })
+    } 
+}

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
-import { loginFailure, loginStart, loginSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/userSlice';
+import { updateUserFailure, updateUserStart, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/userSlice';
 import {
   getDownloadURL, getStorage, ref, uploadBytesResumable,
 } from 'firebase/storage';
@@ -76,6 +76,25 @@ export default function Profile() {
     }
   }
 
+  const handleDeleteUser = async() => {
+    try{
+      dispatch(deleteUserStart());
+      const res = await fetch(`user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      console.log(data);
+      if(data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+      //navigate('/login');
+    } catch(err) {
+      dispatch(deleteUserFailure(err.message));
+    }
+  }
+
   return (
     <div className='mx-auto max-w-lg p-3'>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
@@ -135,7 +154,7 @@ export default function Profile() {
         </button>
       </form>
       <div className='flex justify-between mt-5'>
-        <button type='button'
+        <button type='button' onClick={handleDeleteUser}
           className='uppercase text-white bg-red-600 hover:opacity-95 rounded-lg p-3'> Delete Account
         </button>
         <button type='button'

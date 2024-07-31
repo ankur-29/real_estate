@@ -10,9 +10,7 @@ export const verifyUser = (req, res, next) => {
         if(!decode) {
             return res.status(400).json({message : 'Invalid Token'});
         }
-        console.log(decode);
-        req.id = decode.userId;
-
+        req.id = decode.id;
         next();
     } catch(e) {
         console.log(e);
